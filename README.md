@@ -1,2 +1,2 @@
 # learning_cookbook
-一些随笔
+零零碎碎的知识
