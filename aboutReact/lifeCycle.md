@@ -1,6 +1,6 @@
-#Constructor的说明
+###Constructor的说明
 
 * * *
-#ComponentDidMount的说明
+###ComponentDidMount的说明
 
 * * *
