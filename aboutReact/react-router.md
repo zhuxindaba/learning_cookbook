@@ -1,4 +1,6 @@
 ###react-router的学习体会
+* * *
+####react-router简单介绍
 1.	用react-router可以不用我们用window.addEventListener('hashchanged', fn)去监听当hash值改变了,UI如何渲染.  
 2.	react-router的router内部原理会把你的<Route>元素的层级结构转换为一个route config JSX语法大概是这个样子的:  
 ```
@@ -30,3 +32,11 @@ ReactDOM.render((
 	);
 ```
 4.	我们可以通过react-router的this.props.location.query.paramName得到url中传的参数值
+* * *
+####Route Configuration介绍
+1.	这个配置文件告诉router如何去匹配url，当匹配url的时候运行什么代码  
+|  URL   |Components|  
+|————————|——————————|
+|/about  |  app     |
+|/index  |App->About|
+
