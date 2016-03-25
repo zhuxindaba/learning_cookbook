@@ -35,8 +35,7 @@ ReactDOM.render((
 * * *
 ####Route Configuration介绍
 1.	这个配置文件告诉router如何去匹配url，当匹配url的时候运行什么代码  
-|  URL   |Components|  
-|————————|——————————|
-|/about  |  app     |
-|/index  |App->About|
-
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
