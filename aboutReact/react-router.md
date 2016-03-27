@@ -16,14 +16,14 @@ ReactDOM.render((
 ), document.body)
 ```
 生命周期的方法何时执行？   
--	当用户输入'/',App组件的componentDidMount被唤起,Home组件的componentDidMount被唤起,Index,About无  
--	当用户'/index/123',App组件的componentWillReceiveProps,componentDidUpdate被唤起    
++	当用户输入'/',App组件的componentDidMount被唤起,Home组件的componentDidMount被唤起,Index,About无  
++	当用户'/index/123',App组件的componentWillReceiveProps,componentDidUpdate被唤起    
 Home组件的componentWillUnmount被唤起,Index组件的componentDidMount被唤起  
 App组件组件的componentWillReceiveProps和componentDidUpdate被唤起,因为它依旧渲染只不过是接收到新的props例如  
 `children, params, location`  
 Home组件不被渲染了所以它不会被镶嵌了  
 Invoice首先就被镶嵌了  
--	当用户输入'/index/789',App组件的componentWillReceiveProps,componentDidUpdate被唤起    
++	当用户输入'/index/789',App组件的componentWillReceiveProps,componentDidUpdate被唤起    
 Index组件的componentWillReceiveProps, componentDidUpdate被唤起，因为接收到了新的属性，  尽管之前这两个组件  
 已经被镶嵌了，但是现在依旧的镶嵌 
 3.	如果你不喜欢这种写法也可以简单的对象代替它,大概是这个样子  
