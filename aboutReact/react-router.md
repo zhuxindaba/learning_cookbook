@@ -44,8 +44,10 @@ Invoice首先就被镶嵌了
 Index组件的componentWillReceiveProps, componentDidUpdate被唤起，因为接收到了新的属性，  尽管之前这两个组件  
 已经被镶嵌了，但是现在依旧的镶嵌 
 +	当用户输入'/about/123',App组件的componentWillReceiveProps,componentDidUpdate被唤起    
-Index组件的componentWillUnmount被唤起,About组件的componentDidMount被唤起     
+Index组件的componentWillUnmount被唤起,About组件的componentDidMount被唤起    
+ 
 * * *
+
 ####Route Configuration介绍
 -	这个配置文件告诉router如何去匹配url，当匹配url的时候运行什么代码  
 ```
