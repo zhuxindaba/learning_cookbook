@@ -11,10 +11,12 @@
 						desc: ''	//自己定义，你将希望通过这个动作告知其余组建通过这个动作发生的事
 					}
 ```
-3. 使用reducer修改state,reducer是一个纯函数,它接收的参数为先前的state和将要执行的action,并返回新的state   
-* * *
+3. 使用reducer修改state,reducer是一个纯函数,它接收的参数为先前的state和将要执行的action,并返回新的state
+
+***
 ###Action
-Action是把数据从应用中传到store的有效载荷,它是store数据的唯一来源,一般通过store.dispatch( {type: 'xx', desc: 'xx'} )将action传到store     
+Action是把数据从应用中传到store的有效载荷,它是store数据的唯一来源,一般通过`store.dispatch( {type: 'xx', desc: 'xx'} )`将action传到store
+     
 ###ActionCreator
 ActionCreator就是生成action对象的函数,返回一个action对象
 ```
