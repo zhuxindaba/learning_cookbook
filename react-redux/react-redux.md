@@ -102,9 +102,33 @@ createStore()的第二个参数用来设置初始状态
 Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯javascript    
 1. Redux的React绑定包含了容器组件和展示组件相分离的开发思想，明智的做法就是只在最顶层组件（路由操作）    
 里使用Redux。其余内部组件仅仅是展示性的，所有数据都通过props传入    
-2. 连接到Redux，**通过react-redux提供的connect()方法将包装好的组件连接到redux**。
+2. 连接到Redux，**通过react-redux提供的connect()方法将包装好的组件连接到redux**。     
 		**任何一个从connect()包装好的组件都可以得到一个dispatch方法作为组件的props，以及得到全局state中所需的内容**
 		connect()的唯一参数是selector。此方法可以从Redux store中接收到全局state，然后返回组件中需要的props
+```
+	class App extends React.Component {
+		render() {
+			return(
+				//...
+			);
+		}
+	}
+	
+	//基于全局state，哪些是我们想要注入props的
+	//https://github.com/reactjs/reselect这个待研究，用这个注入效果更好?
+	function select(state) {
+		return {
+			xxx: state.xxx
+		}
+	}
+	
+	//包装component
+	export default connect(select)(App);
+```
+***
+
+###异步Action
+**todo**
 
 
 
