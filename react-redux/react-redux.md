@@ -1,6 +1,7 @@
 ###为什么要用react-redux?
-在单页应用中,服务器的相应,UI状态,缓存数据,被选中的标签,是否加载动画效果等等这些都可以理解为state,当应用变得庞大复杂时,    
-传统的javascript代码处理这些状态 ,只会让维护变得更加困难,而用redux的原因就是将应用程序中的state的变化变得可预测
+		在单页应用中,服务器的相应,UI状态,缓存数据,被选中的标签,是否加载动画效果等等这些都可以理解为state,当应用变得庞大
+		复杂时传统的javascript代码处理这些状态 ,只会让维护变得更加困难,而用redux的原因就是将应用程序中的state的变化变得
+		可预测
 ***
 
 ###redux的三大原则
@@ -44,9 +45,9 @@ Action只是描述了事件发生了而已,但是并没有指明应用如何更�
 1. 修改传入参数    
 2. 执行有副作用的操作,如API请求和路由跳转    
 3.调用非纯函数,如Date.norw()或Math.random()    
-每个reducer只负责全局state中它负责的一部分。每个reducer的state参数都不同，分别对应它管理的那部分的state数据     
-combineReducers()所做的只是生成一个函数,这个函数来调用你的一系列reducer，每个reducer根据它们的key来    
-筛选出state中的一部分数据并处理,然后这个生成函数将所有reducer的结果合并成一个大的对象。
+		每个reducer只负责全局state中它负责的一部分。每个reducer的state参数都不同，分别对应它管理的那部分的state数据     
+		combineReducers()所做的只是生成一个函数,这个函数来调用你的一系列reducer，每个reducer根据它们的key来
+		筛选出state中的一部分数据并处理,然后这个生成函数将所有reducer的结果合并成一个大的对象。
 ***
 
 ###Store
@@ -63,9 +64,9 @@ createStore()的第二个参数用来设置初始状态
 严格的单项数据流是redux架构的设计核心,Redux应用中数据的生命周期遵循下面4个步骤:   
 1. 调用store.dispatch(action),你可以在任何地方调用store.dispatch(action),组件中，定时器中    
 2. Redux store调用传入的reducer函数.      
-Store会把连个参数传入reducer：当前的state树和action。reducer是一个纯函数。它仅仅用于计算下一个state。它应该是完全    
-可以预测的：    多次传入相同的输入必须产生相同的输出。它不应该做有副作用的操作，如API调用或路由跳转。    
-这些应该在dispatch action前发生    
+		Store会把连个参数传入reducer：当前的state树和action。reducer是一个纯函数。它仅仅用于计算下一个state。它应该是完全    
+		可以预测的：    多次传入相同的输入必须产生相同的输出。它不应该做有副作用的操作，如API调用或路由跳转。    
+		这些应该在dispatch action前发生    
 3. 根reducer应该用combineReducers()把多个reducer输出合并成单一的一个state树
 ```
 	function todos(state=[], action) {
