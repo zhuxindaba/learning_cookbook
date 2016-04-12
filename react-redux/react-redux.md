@@ -45,8 +45,8 @@ Action只是描述了事件发生了而已,但是并没有指明应用如何更�
 2. 执行有副作用的操作,如API请求和路由跳转    
 3.调用非纯函数,如Date.norw()或Math.random()    
 每个reducer只负责全局state中它负责的一部分。每个reducer的state参数都不同，分别对应它管理的那部分的state数据     
-combineReducers()所做的只是生成一个函数,这个函数来调用你的一系列reducer，每个reducer根据它们的key来筛选出state中    
-的一部分数据并处理,然后这个生成函数将所有reducer的结果合并成一个大的对象。
+combineReducers()所做的只是生成一个函数,这个函数来调用你的一系列reducer，每个reducer根据它们的key来    
+筛选出state中的一部分数据并处理,然后这个生成函数将所有reducer的结果合并成一个大的对象。
 ***
 
 ###Store
@@ -94,15 +94,16 @@ Store会把连个参数传入reducer：当前的state树和action。reducer是�
 <br>
 4. 	Redux Store保存了根reducer返回的完整的state树，这个新的树就是应用的下一个state!所有调用store.subscribe(listener)   
 的监听器都将被调用;监听器里可以调用`store.getState()`获取当前的state   
-现在，可以应用新的state来更新UI，在组建中的componentDidMount生命周期中调用`this.setState()`来更新
+现在，可以应用新的state来更新UI，在组建中的componentDidMount生命周期中调用`this.setState()`来更新		
 ***
 
 ###搭配React
 Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯javascript    
 1. Redux的React绑定包含了容器组件和展示组件相分离的开发思想，明智的做法就是只在最顶层组件（路由操作）    
 里使用Redux。其余内部组件仅仅是展示性的，所有数据都通过props传入    
-2. 连接到Redux，通过react-redux提供的connect()方法将包装好的组件连接到redux。      
-任何一个
+2. 连接到Redux，**通过react-redux提供的connect()方法将包装好的组件连接到redux**。
+		**任何一个从connect()包装好的组件都可以得到一个dispatch方法作为组件的props，以及得到全局state中所需的内容**
+		connect()的唯一参数是selector。此方法可以从Redux store中接收到全局state，然后返回组件中需要的props
 
 
 
