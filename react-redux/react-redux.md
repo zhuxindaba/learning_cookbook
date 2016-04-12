@@ -43,7 +43,7 @@ Action只是描述了事件发生了而已,但是并没有指明应用如何更�
 不要在reducer里做以下操作:    
 1. 修改传入参数
 2. 执行有副作用的操作,如API请求和路由跳转
-3. 调用非纯函数,如Date.norw()或Math.random()    
+3.调用非纯函数,如Date.norw()或Math.random()
 每个reducer只负责全局state中它负责的一部分。每个reducer的state参数都不同，分别对应它管理的那部分的state数据     
 combineReducers()所做的只是生成一个函数,这个函数来调用你的一系列reducer，每个reducer根据它们的key来筛选出state中    
 的一部分数据并处理,然后这个生成函数将所有reducer的结果合并成一个大的对象。
@@ -51,21 +51,21 @@ combineReducers()所做的只是生成一个函数,这个函数来调用你的�
 
 ###Store
 action用来描述发生了什么，使用reducer根据action更新state，Store就是将它们联系到一起的对象,Store的职责:    
-1. 维持应用程序的state
-2. 提供getState()获取state
-3. 提供dispatch(action)方法更新state
-4. 提供subscribe(listener)注册监听器
+1. 维持应用程序的state    
+2. 提供getState()获取state    
+3. 提供dispatch(action)方法更新state    
+4. 提供subscribe(listener)注册监听器    
 Redux应用中只有唯一的一个store,通过redux的createStore(reducers, initialState)创建store    
 createStore()的第二个参数用来设置初始状态    
 ***
 
 ###数据流
 严格的单项数据流是redux架构的设计核心,Redux应用中数据的生命周期遵循下面4个步骤:   
-1. 调用store.dispatch(action),你可以在任何地方调用store.dispatch(action),组件中，定时器中
-2. Redux store调用传入的reducer函数.  
+1. 调用store.dispatch(action),你可以在任何地方调用store.dispatch(action),组件中，定时器中    
+2. Redux store调用传入的reducer函数.      
 Store会把连个参数传入reducer：当前的state树和action。reducer是一个纯函数。它仅仅用于计算下一个state。它应该是完全    
 可以预测的：    多次传入相同的输入必须产生相同的输出。它不应该做有副作用的操作，如API调用或路由跳转。    
-这些应该在dispatch action前发生
+这些应该在dispatch action前发生    
 3. 根reducer应该用combineReducers()把多个reducer输出合并成单一的一个state树
 ```
 	function todos(state=[], action) {
@@ -100,7 +100,7 @@ Store会把连个参数传入reducer：当前的state树和action。reducer是�
 ###搭配React
 Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯javascript    
 1. Redux的React绑定包含了容器组件和展示组件相分离的开发思想，明智的做法就是只在最顶层组件（路由操作）    
-里使用Redux。其余内部组件仅仅是展示性的，所有数据都通过props传入
+里使用Redux。其余内部组件仅仅是展示性的，所有数据都通过props传入    
 2. 连接到Redux，通过react-redux提供的connect()方法将包装好的组件连接到redux。      
 任何一个
 
