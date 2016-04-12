@@ -1,6 +1,6 @@
 ###为什么要用react-redux?
-在单页应用中,服务器的相应,UI状态,缓存数据,被选中的标签,是否加载动画效果等等这些都可以理解为state,当应用变得庞大复杂时,传统的javascript代码处理这些状态    
-只会让维护变得更加困难,而用redux的原因就是将应用程序中的state的变化变得可预测
+在单页应用中,服务器的相应,UI状态,缓存数据,被选中的标签,是否加载动画效果等等这些都可以理解为state,当应用变得庞大复杂时,    
+传统的javascript代码处理这些状态 ,只会让维护变得更加困难,而用redux的原因就是将应用程序中的state的变化变得可预测
 ***
 
 ###redux的三大原则
@@ -43,13 +43,11 @@ Action只是描述了事件发生了而已,但是并没有指明应用如何更�
 在redux应用中,所有的state都被保存在一个单一对象中。reducer就是一个函数,接收旧的state和action,返回新的state.    
 不要在reducer里做以下操作:    
 1. 修改传入参数
-<br>
 2. 执行有副作用的操作,如API请求和路由跳转
-<br>
 3. 调用非纯函数,如Date.norw()或Math.random()    
 每个reducer只负责全局state中它负责的一部分。每个reducer的state参数都不同，分别对应它管理的那部分的state数据     
-combineReducers()所做的只是生成一个函数,这个函数来调用你的一系列reducer，每个reducer根据它们的key来筛选出state中的一部分数据并处理,    
-然后这个生成函数将所有reducer的结果合并成一个大的对象。
+combineReducers()所做的只是生成一个函数,这个函数来调用你的一系列reducer，每个reducer根据它们的key来筛选出state中    
+的一部分数据并处理,然后这个生成函数将所有reducer的结果合并成一个大的对象。
 ***
 
 ###Store
@@ -70,8 +68,9 @@ createStore()的第二个参数用来设置初始状态
 1. 调用store.dispatch(action),你可以在任何地方调用store.dispatch(action),组件中，定时器中
 <br>    
 2. Redux store调用传入的reducer函数.  
-Store会把连个参数传入reducer：当前的state树和action。reducer是一个纯函数。它仅仅用于计算下一个state。它应该是完全可以预测的：    
-多次传入相同的输入必须产生相同的输出。它不应该做有副作用的操作，如API调用或路由跳转。这些应该在dispatch action前发生
+Store会把连个参数传入reducer：当前的state树和action。reducer是一个纯函数。它仅仅用于计算下一个state。它应该是完全    
+可以预测的：    多次传入相同的输入必须产生相同的输出。它不应该做有副作用的操作，如API调用或路由跳转。    
+这些应该在dispatch action前发生
 <br>   
 3. 根reducer应该用combineReducers()把多个reducer输出合并成单一的一个state树
 ```
@@ -106,8 +105,8 @@ Store会把连个参数传入reducer：当前的state树和action。reducer是�
 
 ###搭配React
 Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯javascript    
-1. Redux的React绑定包含了容器组件和展示组件相分离的开发思想，明智的做法就是只在最顶层组件（路由操作）里使用Redux。     
-其余内部组件仅仅是展示性的，所有数据都通过props传入
+1. Redux的React绑定包含了容器组件和展示组件相分离的开发思想，明智的做法就是只在最顶层组件（路由操作）    
+里使用Redux。其余内部组件仅仅是展示性的，所有数据都通过props传入
 <br>
 2. 连接到Redux，通过react-redux提供的connect()方法将包装好的组件连接到redux。      
 任何一个
