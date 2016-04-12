@@ -41,9 +41,9 @@ Action只是描述了事件发生了而已,但是并没有指明应用如何更�
 ######设计state的结构
 在redux应用中,所有的state都被保存在一个单一对象中。reducer就是一个函数,接收旧的state和action,返回新的state.    
 不要在reducer里做以下操作:    
-1. 修改传入参数
-2. 执行有副作用的操作,如API请求和路由跳转
-3.调用非纯函数,如Date.norw()或Math.random()
+1. 修改传入参数    
+2. 执行有副作用的操作,如API请求和路由跳转    
+3.调用非纯函数,如Date.norw()或Math.random()    
 每个reducer只负责全局state中它负责的一部分。每个reducer的state参数都不同，分别对应它管理的那部分的state数据     
 combineReducers()所做的只是生成一个函数,这个函数来调用你的一系列reducer，每个reducer根据它们的key来筛选出state中    
 的一部分数据并处理,然后这个生成函数将所有reducer的结果合并成一个大的对象。
