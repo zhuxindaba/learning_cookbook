@@ -30,6 +30,7 @@ ActionCreator就是生成action对象的函数,返回一个action对象
 		}
 	}
 ```
+<br>
 在store里调用action创建函数: `store.dispatch(addTodo('learn redux'))`   
 在React组建中如何调用呢？需要用到react-redux中提供的connect()(ComponentName)将dispatch函数注入到组建的props中然后通过    
 `this.props.dispatch(addTodo(text))`调用    
@@ -89,6 +90,7 @@ Store会把连个参数传入reducer：当前的state树和action。reducer是�
 		visibleTodoFilter
 	});
 ```
+<br>
 当你触发action后，combineReducers返回的reducers会负责调用两个reducer,然后把两个结果集合并成一个state树:    
 ```
 	return{
@@ -96,6 +98,7 @@ Store会把连个参数传入reducer：当前的state树和action。reducer是�
 		visibleTodoFilter: nextVisibleTodoFilter
 	}
 ```
+<br>
 4. 	Redux Store保存了根reducer返回的完整的state树，这个新的树就是应用的下一个state!所有调用store.subscribe(listener)   
 的监听器都将被调用;监听器里可以调用`store.getState()`获取当前的state   
 现在，可以应用新的state来更新UI，在组建中的componentDidMount生命周期中调用`this.setState()`来更新
