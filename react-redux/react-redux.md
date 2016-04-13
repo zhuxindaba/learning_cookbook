@@ -135,6 +135,7 @@ Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯ja
 - **一个通知reducer请求开始的action**
 </br>     
 		对于这种action,reducer可能会切换一下state中的isFeching标记.以此来告诉UI来显示进度条.    
+		
 - **一个通知reducer请求成功结束的action**
 
 
