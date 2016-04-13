@@ -134,8 +134,7 @@ Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯ja
 		这两个时刻都可以更改应用的state;为此，你需要dispatch普通的同步action。一般情况下，每个api请求都至少需要dispatch三个不同的action:
 - **一个通知reducer请求开始的action**
 </br>     
-		对于这种action,reducer可能会切换一下state中的isFeching标记.以此来告诉UI来显示进度条。
-		</br>
+		对于这种action,reducer可能会切换一下state中的isFeching标记.以此来告诉UI来显示进度条。</br>
 - **一个通知reducer请求成功结束的action**
 
 
