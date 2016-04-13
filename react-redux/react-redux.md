@@ -417,6 +417,128 @@ export default connect(state => ({
   posts: state.posts
 }))(Posts);
 ```
+</br>
+***
+###计算衍生数据
+		`Reselect库`可以创建可记忆的可组合的selector函数，Reselect selectors可以高效的计算
+		Redux store里的衍生数据    
+		
+不使用`reselect`当state发生变化，组件更新时，会如果state tree非常大，会带来性能问题		
+
+- **创建可记忆的Selector：**
+		只有在我们关注的state发生变化时才重新计算此state，而在其他非相关state的变化不会引起
+		此state重新计算。
+		Reselect提供的`creatSelector`函数创建可记忆的selector，`createSelector`接收一个input-selectors
+		数组和一个转换函数作为参数。如果state tree的改变会引起input-selectors值变化，那么selector会调用
+		转换函数，传入input-selectors作为参数，并返回结果，如果input-selectors的值和前一次一样，它将会直接
+		返回前一次计算的数据，而不重新调用转换函数    
+		
+`selectors/TodoSelectors.js`
+</br>
+```
+import { createSelector } from 'reselect';
+import { VisibilityFilters } from './actions';
+
+function selectTodos(todos, filter) {
+  switch (filter) {
+  case VisibilityFilters.SHOW_ALL:
+    return todos;
+  case VisibilityFilters.SHOW_COMPLETED:
+    return todos.filter(todo => todo.completed);
+  case VisibilityFilters.SHOW_ACTIVE:
+    return todos.filter(todo => !todo.completed);
+  }
+}
+
+const visibilityFilterSelector = (state) => state.visibilityFilter;
+const todosSelector = (state) => state.todos;
+
+export const visibleTodosSelector = createSelector(
+  [visibilityFilterSelector, todosSelector],
+  (visibilityFilter, todos) => {
+    return {
+      visibleTodos: selectTodos(todos, visibilityFilter),
+      visibilityFilter
+    };
+  }
+);
+```
+</br>
+		在上例中，visibilityFilterSelector 和 todosSelector 是 input-selector。因为他们并不转换数据，
+		所以被创建成普通的非记忆的 selector 函数。但是，visibleTodosSelector 是一个可记忆的 selector。
+		他接收 visibilityFilterSelector 和 todosSelector 为 input-selector，还有一个转换函数来计算过
+		滤的 todos 列表。
+		    
+- **组合 Selector**
+		可记忆的 selector 自身可以作为其它可记忆的 selector 的 input-selector。下面
+		的 visibleTodosSelector 被当作另一个 selector 的 input-selector，来进一步通过关键字（keyword）过滤 todos。    
+		
+```
+const keywordSelector = (state) => state.keyword
+
+const keywordFilterSelector = createSelector(
+  [ visibleTodosSelector, keywordSelector ],
+  (visibleTodos, keyword) => visibleTodos.filter(
+    todo => todo.indexOf(keyword) > -1
+  )
+)
+```
+</br>
+- **连接 Selector 和 Redux Store**
+在react-redux中，使用 connect 来连接可记忆的 selector 和 Redux store    
+
+`containers/App.js`
+</br>
+```
+import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { addTodo, completeTodo, setVisibilityFilter } from '../actions'
+import AddTodo from '../components/AddTodo'
+import TodoList from '../components/TodoList'
+import Footer from '../components/Footer'
+import { visibleTodosSelector } from '../selectors/todoSelectors'
+
+class App extends Component {
+  render() {
+    // Injected by connect() call:
+    const { dispatch, visibleTodos, visibilityFilter } = this.props
+    return (
+      <div>
+        <AddTodo
+          onAddClick={text =>
+            dispatch(addTodo(text))
+          } />
+        <TodoList
+          todos={this.props.visibleTodos}
+          onTodoClick={index =>
+            dispatch(completeTodo(index))
+          } />
+        <Footer
+          filter={visibilityFilter}
+          onFilterChange={nextFilter =>
+            dispatch(setVisibilityFilter(nextFilter))
+          } />
+      </div>
+    )
+  }
+}
+
+App.propTypes = {
+  visibleTodos: PropTypes.arrayOf(PropTypes.shape({
+    text: PropTypes.string.isRequired,
+    completed: PropTypes.bool.isRequired
+  })),
+  visibilityFilter: PropTypes.oneOf([
+    'SHOW_ALL',
+    'SHOW_COMPLETED',
+    'SHOW_ACTIVE'
+  ]).isRequired
+}
+
+// 把 selector 传递给连接的组件
+export default connect(visibleTodosSelector)(App)
+```
+
 
 
 
