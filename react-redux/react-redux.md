@@ -221,10 +221,9 @@ Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯ja
 **middleware是指可以被嵌入在框架接收请求道产生相应过程之中的代码，它提供的是位于action被发起之后，到达reducer之前的扩展点**    
 可以利用Redux middleware来进行日志记录、创建崩溃报告、调用异步接口或者路由等等。        
 		
-**<font color="red">使用Redux的一个益处就是它让state的变化过程变得可预知和透明。每当一个action发起后，新的state就会被计算保    
-存下来。state不能自身修改，只能由特定的action引起变化</font>**    
+**使用Redux的一个益处就是它让state的变化过程变得可预知和透明。每当一个action发起后，新的state就会被计算保    
+存下来。state不能自身修改，只能由特定的action引起变化**    
 
-<font color="red">hongse?</font>
 
 		
 
