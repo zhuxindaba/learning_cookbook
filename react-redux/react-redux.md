@@ -130,10 +130,10 @@ Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯ja
 ###异步Action
 		前面所述的是同步action,每当dispatch action时,state会理解被更新。那么Redux如何操作异步数据流?
 ######Action
-当调用异步API时,有两个非常关键的时刻:发起请求的时刻,和接收响应的时刻（也可能是超时）
+当调用异步API时,有两个非常关键的时刻:发起请求的时刻,和接收响应的时刻（也可能是超时）。
 </br>
-		着两个时刻都可以更改应用的state;为此，你需要dispatch普通的同步action。一般情况下，每个api请求都至少需要dispatch三个不同的action:
-		- **一个通知reducer请求开始的action**    
+		这两个时刻都可以更改应用的state;为此，你需要dispatch普通的同步action。一般情况下，每个api请求都至少需要dispatch三个不同的action:
+- **一个通知reducer请求开始的action**    
 		
 
 
