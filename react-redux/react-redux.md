@@ -224,6 +224,126 @@ Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯ja
 **使用Redux的一个益处就是它让state的变化过程变得可预知和透明。每当一个action发起后，新的state就会被计算保    
 存下来。state不能自身修改，只能由特定的action引起变化**    
 
+***
+###减少样板代码
+- Action的type用常量，可以将所有type放在一个文件中，然后引入    
+
+- Action Creators创建生成action的函数    
+
+- 生产Action Creators写简单的action creator函数，尤其是数量巨大的时候，代码不易于维护，可以写一个用于生成action creator    
+的函数：    
+```
+	function makeActionCreator(type, ...argNames) {
+		return function(...args) {
+			let action = { type };
+			argNames.forEach(arg, index) {
+				action[argNames[index]] = args[index];
+			}
+			return action;
+		}
+	}
+	
+	const ADD_TODO = 'ADD_TODO';
+	const EDIT_TODO = 'EDIT_TODO'
+	const REMOVE_TODO = 'REMOVE_TODO';
+	
+	export const addTodo = makeActionCreator(ADD_TODO, 'todo');
+	export const editTodo = makeActionCreator(EDIT_TODO, 'id', 'todo');
+	export const removeTodo = makeActionCreator(REMOVE_TODO, 'id');
+```     
+
+**redux-actions可以帮助生成action creator，这个待研究**    
+
+- 异步Action Creators    
+
+		中间件让你在每个action对象分发出去之前，注入一个自定义的逻辑来解释你的action对象。异步action是中间件
+		最常见用例。如果没有中间件，dispatch只能接收一个普通对象。因此我们必须在components里面进行AJAX调用：    
+	
+```
+export function loadPostsSuccess(userId, response) {
+  return {
+    type: 'LOAD_POSTS_SUCCESS',
+    userId,
+    response
+  };
+}
+
+export function loadPostsFailure(userId, error) {
+  return {
+    type: 'LOAD_POSTS_FAILURE',
+    userId,
+    error
+  };
+}
+
+export function loadPostsRequest(userId) {
+  return {
+    type: 'LOAD_POSTS_REQUEST',
+    userId
+  };
+}
+```
+</br>
+
+```
+import { Component } from 'react';
+import { connect } from 'react-redux';
+import { loadPostsRequest, loadPostsSuccess, loadPostsFailure } from './actionCreators';
+
+class Posts extends Component {
+  loadData(userId) {
+    // 调用 React Redux `connect()` 注入 props ：
+    let { dispatch, posts } = this.props;
+
+    if (posts[userId]) {
+      // 这里是被缓存的数据！啥也不做。
+      return;
+    }
+
+    // Reducer 可以通过设置 `isFetching` 反应这个 action
+    // 因此让我们显示一个 Spinner 控件。
+    dispatch(loadPostsRequest(userId));
+
+    // Reducer 可以通过填写 `users` 反应这些 actions
+    fetch(`http://myapi.com/users/${userId}/posts`).then(
+      response => dispatch(loadPostsSuccess(userId, response)),
+      error => dispatch(loadPostsFailure(userId, error))
+    );
+  }
+
+  componentDidMount() {
+    this.loadData(this.props.userId);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userId !== this.props.userId) {
+      this.loadData(nextProps.userId);
+    }
+  }
+
+  render() {
+    if (this.props.isLoading) {
+      return <p>Loading...</p>;
+    }
+
+    let posts = this.props.posts.map(post =>
+      <Post post={post} key={post.id} />
+    );
+
+    return <div>{posts}</div>;
+  }
+}
+
+export default connect(state => ({
+  posts: state.posts
+}))(Posts);
+
+```
+</br>
+
+**`redux-thunk`中间件可以把action creators写成`thunks`,也就是返回函数的函数**
+
+
 
 		
 
