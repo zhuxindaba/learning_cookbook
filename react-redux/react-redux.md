@@ -224,6 +224,8 @@ Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯ja
 **<font color="red">使用Redux的一个益处就是它让state的变化过程变得可预知和透明。每当一个action发起后，新的state就会被计算保    
 存下来。state不能自身修改，只能由特定的action引起变化</font>**    
 
+<font color="red">hongse?</font>
+
 		
 
 
