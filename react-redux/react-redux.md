@@ -138,8 +138,78 @@ Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯ja
 		对于这种action,reducer可能会切换一下state中的isFeching标记.以此来告诉UI来显示进度条.    
 		
 - **一个通知reducer请求成功结束的action**
-
-
+</br>
+		对于这种action,reducer可能会把接收到的新数据合并到state中,并重置isFetching。UI则会隐藏进度条，并显示接收到的数据    
+		
+- **一个通知reducer请求失败的action**
+</br>
+		对于这种action，reducer可能会重置isFetching.或者，有些reducer会保存这些失败信息,并在UI显示出来.    
+		
+***
+###异步Action Creator
+		如何将不同的action creator和网络请求结合起来?使用Redux Thunk这个中间件,通过使用中间件，action creator除了返回action对象
+		外还乐意返回函数    
+		
+		当action creator返回函数时，这个函数会被Redux Thunk middleware执行。这个函数并不需要保持纯净；它可以带有副作用，包括异步执行
+		API请求。这个函数还可以dispatch action    
+		
+```
+	//thunk action creator
+	//使用方式和同步cation一样	dispatch(fetchPosts('xxx'))
+	export function fetchPosts(xxx) {
+		//Thunk middleware知道如可处理函数
+		//这里把dispatch方法通过参数的形式传给函数，以此来让它自己也能dispatch action
+		
+		return function(dispatch) {
+			
+			dispatch(action);
+			
+			//执行api请求使用isomorphic-fetch库替代XMLHttpRequest
+		}
+		
+	}
+```
+</br>
+		我们如何在dispatch机制中引入Redux Thunk middleware？使用appluMiddleware(),**thunk的一个优点就是它的结果可以再次被dispatch**    
+		    
+		    
+```
+	//**index.js代码**
+	import thunkMiddleware from 'react-thunk';
+	import createLogger from 'redux-logger';
+	import { createStore, applyMiddleware } from 'redux';
+	
+	const createStoreWithMiddleware = applyMiddleware(
+		thunkMiddleware,	//允许我们dispatch()函数
+		createLogger
+	)(createStore);
+	
+	const reducers = combineReducers({
+		//拆分的单个reducer函数
+	})
+	
+	const store = createStoreWithMiddleware(reducers);
+```
+</br>
+```
+	//**action.js代码**
+	export function fetchPosts(xxx) {
+		return (dispatch) => {
+			//...
+			dispatch(action)
+		}
+	}
+	
+	export function fetchPostsIfNeeder(xxx) {
+		//可接收getState()方法
+		return (fetch, getState) => {
+		
+		}
+	
+	} 
+```
+</br>
+###异步数据流
 
 
 
