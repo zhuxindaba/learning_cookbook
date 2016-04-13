@@ -230,8 +230,7 @@ Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯ja
 
 - Action Creators创建生成action的函数    
 
-- 生产Action Creators写简单的action creator函数，尤其是数量巨大的时候，代码不易于维护，可以写一个用于生成action creator    
-的函数：    
+- 生产Action Creators写简单的action creator函数，尤其是数量巨大的时候，代码不易于维护，可以写一个用于生成action creator的函数：    
 ```
 	function makeActionCreator(type, ...argNames) {
 		return function(...args) {
@@ -259,6 +258,8 @@ Redux和React之间没有关系。Redux支持React、Angular、jQuery甚至纯ja
 		中间件让你在每个action对象分发出去之前，注入一个自定义的逻辑来解释你的action对象。异步action是中间件
 		最常见用例。如果没有中间件，dispatch只能接收一个普通对象。因此我们必须在components里面进行AJAX调用：    
 	
+`actions.js`
+</br>	
 ```
 export function loadPostsSuccess(userId, response) {
   return {
@@ -285,6 +286,8 @@ export function loadPostsRequest(userId) {
 ```
 </br>
 
+`component.js`
+</br>
 ```
 import { Component } from 'react';
 import { connect } from 'react-redux';
@@ -341,7 +344,79 @@ export default connect(state => ({
 ```
 </br>
 
-**`redux-thunk`中间件可以把action creators写成`thunks`,也就是返回函数的函数**
+**`redux-thunk`中间件可以把action creators写成`thunks`,也就是返回函数的函数**    
+
+使用react-redux修改上面的代码：   
+
+`actions.js`
+</br>
+```
+export function loadPosts(userId) {
+  // 用 thunk 中间件解释：
+  return function (dispatch, getState) {
+    let { posts } = getState();
+    if (posts[userId]) {
+      // 这里是数据缓存！啥也不做。
+      return;
+    }
+
+    dispatch({
+      type: 'LOAD_POSTS_REQUEST',
+      userId
+    });
+
+    // 异步分发原味 action
+    fetch(`http://myapi.com/users/${userId}/posts`).then(
+      response => dispatch({
+        type: 'LOAD_POSTS_SUCCESS',
+        userId,
+        respone
+      }),
+      error => dispatch({
+        type: 'LOAD_POSTS_FAILURE',
+        userId,
+        error
+      })
+    );
+  }
+}
+```
+</br>
+`component.js`
+</br>
+```
+import { Component } from 'react';
+import { connect } from 'react-redux';
+import { loadPosts } from './actionCreators';
+
+class Posts extends Component {
+  componentDidMount() {
+    this.props.dispatch(loadPosts(this.props.userId));
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userId !== this.props.userId) {
+      this.props.dispatch(loadPosts(nextProps.userId));
+    }
+  }
+
+  render() {
+    if (this.props.isLoading) {
+      return <p>Loading...</p>;
+    }
+
+    let posts = this.props.posts.map(post =>
+      <Post post={post} key={post.id} />
+    );
+
+    return <div>{posts}</div>;
+  }
+}
+
+export default connect(state => ({
+  posts: state.posts
+}))(Posts);
+```
 
 
 
