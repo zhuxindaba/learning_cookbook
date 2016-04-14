@@ -85,7 +85,7 @@
 
 **返回值**    
 
-		(Store):保存了应用所有state的对象。**改变state的惟一方法是dispatch action。**你也可以subscribe坚挺state的变化，然后更新UI
+	(Store):保存了应用所有state的对象。**改变state的惟一方法是dispatch action。**你也可以subscribe坚挺state的变化，然后更新UI
 		
 </br>
 - **combineReducers(reducers)**    
