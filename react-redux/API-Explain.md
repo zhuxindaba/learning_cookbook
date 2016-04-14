@@ -96,7 +96,7 @@
 
 - **[applyMiddleware(...middlewares)](./explain-applyMiddleware.md)**    
 
-- **bindActionCreators(actionCreators, dispatch)**    
+- **[bindActionCreators(actionCreators, dispatch)](./explain-bindActionCreators.md)**    
 
 - **compose(...functions)**待研究    
 
