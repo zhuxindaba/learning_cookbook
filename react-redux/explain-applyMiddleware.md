@@ -11,6 +11,6 @@
 	
 **参数**    
 
-- 	...middlewares(arguments):遵循Redux middlewareAPI的函数。每个middleware接收`store`的dispatch和getState函数作为命名参数，并返回一个函数    
-该函数会被传入称为`next`的下一个middleware的dispatch方法
+	- 	...middlewares(arguments):遵循Redux middlewareAPI的函数。每个middleware接收`store`的dispatch和getState函数作为命名参数，并返回一个函数    
+	该函数会被传入称为`next`的下一个middleware的dispatch方法
 	
