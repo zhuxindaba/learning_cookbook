@@ -75,6 +75,14 @@
 ####顶级暴露的方法
 - **createStore(reducer, [initialState])**    
 
+创建一个Redux store来以存放应用中的所有state，应用中有且仅有一个store    
+
+**参数**    
+
+1. reducer(*Function*):接收两个参数，分别是当前的state树和要处理的action，返回新的state树。    
+
+2. [initialState](any):初始时的state，如果你使用combineReducers创建reducer，它必须是一个普通对象，与传入的keys保持同样的结构       
+
 - **combineReducers(reducers)**    
 
 - **applyMiddleware(...middlewares)**    
