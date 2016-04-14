@@ -1,5 +1,4 @@
 #Redux API和词汇解释
-***
 ###词汇解释
 - **State**    
 
@@ -72,3 +71,19 @@
 </br>
 ***
 ###API文档
+</br>
+####顶级暴露的方法
+- **createStore(reducer, [initialState])**    
+
+- **combineReducers(reducers)**    
+
+- **applyMiddleware(...middlewares)**    
+
+- **bindActionCreators(actionCreators, dispatch)**    
+
+- **compose(...functions)**待研究    
+
+####Store API
+</br>
+* **Store**
+  - getState()
