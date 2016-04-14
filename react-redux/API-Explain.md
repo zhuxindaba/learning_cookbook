@@ -88,9 +88,13 @@
 	(Store):保存了应用所有state的对象。**改变state的惟一方法是dispatch action。**你也可以subscribe坚挺state的变化，然后更新UI
 		
 </br>
-- **combineReducers(reducers)**    
+- **combineReducers(reducers)**      
 
-- **applyMiddleware(...middlewares)**    
+	**state对象的结构由传入的多个reducer的key决定**,通过为传入对象的reducer命名来控制state key的命名。例如
+	`combineReducers({todos: todoReducer, counter: counterReducer})`将state的结构变为`{todos: 'xxx', counter: 'xxx'}`
+	ES6的简写方法`combineReducers({ counter, todos })`等价于`combineReducers({ counter: counter, todos: todos })`
+
+- **[applyMiddleware(...middlewares)](./explain-applyMiddleware.md)**    
 
 - **bindActionCreators(actionCreators, dispatch)**    
 

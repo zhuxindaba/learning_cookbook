@@ -1,0 +1,1 @@
+#bindActionCreators(actionCreators, dispatch)
