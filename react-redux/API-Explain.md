@@ -85,5 +85,14 @@
 
 ####Store API
 </br>
-* **Store**
-  - getState()
+* **Store**   
+
+  - getState()    
+  
+  - dispatch(action)    
+  
+  - subscribe(listener)    
+  
+  - getReducer()    
+  
+  - replaceReducer(nextReducer)
