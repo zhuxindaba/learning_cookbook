@@ -79,10 +79,15 @@
 
 **参数**    
 
-1. reducer(*Function*):接收两个参数，分别是当前的state树和要处理的action，返回新的state树。    
+1. `reducer(*Function*)`:接收两个参数，分别是当前的state树和要处理的action，返回新的state树。    
 
-2. [initialState](any):初始时的state，如果你使用combineReducers创建reducer，它必须是一个普通对象，与传入的keys保持同样的结构       
+2. `[initialState](any)`:初始时的state，如果你使用combineReducers创建reducer，它必须是一个普通对象，与传入的keys保持同样的结构       
 
+**返回值**    
+
+		(Store):保存了应用所有state的对象。**改变state的惟一方法是dispatch action。**你也可以subscribe坚挺state的变化，然后更新UI
+		
+</br>
 - **combineReducers(reducers)**    
 
 - **applyMiddleware(...middlewares)**    
