@@ -75,7 +75,7 @@
 ####顶级暴露的方法
 - **createStore(reducer, [initialState])**    
 
-创建一个Redux store来以存放应用中的所有state，应用中有且仅有一个store    
+        创建一个Redux store来以存放应用中的所有state，应用中有且仅有一个store    
 
 **参数**    
 
