@@ -1,10 +1,10 @@
-###### 安装
+##### 安装
 
 ```
 npm install mocha -g
 ```
 
-###### 快速开始
+##### 快速开始
 
 -	编辑test.js
 
@@ -32,7 +32,7 @@ describe('Array', function() {
 > - better-assert  
 > - unexpected
 
-###### 同步的代码
+##### 同步的代码
 
 > 当测试同步代码时，省略回掉函数，Mocha会自动的执行下一个测试用例
 
@@ -126,7 +126,7 @@ describe('hooks', function() {
 });
 ```
 
-###### 描述钩子
+##### 描述钩子
 
 > 所有的带有描述性的钩子都可以被调用，这样使测试可以更容易地找到错误，如果钩子是带有名字  
 > 的函数，如果一个钩子没有描述，那么这些函数名就会被用到
@@ -145,7 +145,7 @@ beforeEach('some description', function() {
 });
 ```
 
-###### 异步钩子
+##### 异步钩子
 
 > 所有的钩子(`before()`, `after()`, `beforeEach()`, `afterEach()`)可以是异步的也可以  
 > 是同步的,和普通的测试用例表现是一样的，例如：
@@ -201,4 +201,17 @@ setTimeout(function() {
 
   run();
 }, 5000);
+```
+
+##### 等待中的测试
+
+> 等待的测试是没有回掉函数
+
+```
+describe('Array', function() {
+  describe('#indexOf()', function() {
+    // pending test below
+    it('should return -1 when the value is not present');
+  });
+});
 ```
