@@ -215,3 +215,161 @@ describe('Array', function() {
   });
 });
 ```
+
+##### 专一的测试
+
+> 专一的特性允许运行给函数添加`only()`来运行指定的测试，下面的例子就是执行只有一个指定的套件
+
+```
+describe('Array', function() {
+  describe.only('#indexOf()', function() {
+    // ...
+  });
+});
+
+```
+
+> **注意:**所有内置的套件仍然会继续执行，例:
+
+```
+describe('Array', function() {
+  describe('#indexOf()', function() {
+    it.only('should return -1 unless present', function() {
+      // ...
+    });
+
+    it('should return the index when present', function() {
+      // ...
+    });
+  });
+});
+```
+
+> **警告：**如果有多个`only()`回掉，测试套件的结果可能是意外的表现。
+
+##### 包含的测试
+
+> 这个特性和`.only()`相反，通过`.skip()`告诉Mocha忽略这些套件或者测试用例，所有跳过的  
+> 测试都会被标记上`pending`,例如:
+
+```
+describe('Array', function() {
+  describe.skip('#indexOf()', function() {
+    // ...
+  });
+});
+```
+
+> 或者在一个明确的测试用例中:
+
+```
+describe('Array', function() {
+  describe('#indexOf()', function() {
+    it.skip('should return -1 unless present', function() {
+      // ...
+    });
+
+    it('should return the index when present', function() {
+      // ...
+    });
+  });
+});
+
+
+```
+
+> 使用`.skip()`输出说明/注释， 可以在运行中使用`this.skip()`,如果一个测试需要环境相关  
+> 的配置文件，并且在事先检测不到的，运行时skip就比较合适了.
+
+```
+it('should only test in the correct environment', function() {
+  if (/* check test environment */) {
+    // make assertions
+  } else {
+    this.skip();
+  }
+});
+```
+
+> 上面的例子将会上报`pending`,注意当调用`this.skip()`会终止当前的test  
+> **Best practice：**为了避免困惑，在调用`this.skip()`之后不要执行进一步的指令
+>
+> 当前代码与上面例子的对比
+
+```
+it('should only test in the correct environment', function() {
+  if (/* check test environment */) {
+    // make assertions
+  } else {
+    // do nothing
+  }
+});
+```
+
+> 因为这个测试没做任何事，他被上报为`passing`,在测试用力中，不要不做任何事，一个测试应该  
+> 创建一个断言或者使用`this.skip()`. 在`before`钩子里使用`this.skip()`跳跃多个测试用例
+
+```
+before(function() {
+  if (/* check test environment */) {
+    // setup code
+  } else {
+    this.skip();
+  }
+});
+
+
+```
+
+##### 重试测试
+
+> 可以决定重操作测试用例的次数，这个特性设计处理端对端测试(),**不建议用在单元测试中**  
+> 这个特性在`beforeEach/afterEach`中重复运行，`before/after`中不行。  
+> **注意**下面的例子是卸载web应用测试中的(会覆盖全局Mocha钩子)
+
+```
+describe('retries', function() {
+  // Retry all tests in this suite up to 4 times
+  this.retries(4);
+
+  beforeEach(function () {
+    browser.get('http://www.yahoo.com');
+  });
+
+  it('should succeed on the 3rd try', function () {
+    // Specify this test to only retry up to 2 times
+    this.retries(2);
+    expect($('.foo').isDisplayed()).to.eventually.be.true;
+  });
+});
+
+```
+
+##### 动态生成测试
+
+```
+var assert = require('chai').assert;
+
+function add() {
+  return Array.prototype.slice.call(arguments).reduce(function(prev, curr) {
+    return prev + curr;
+  }, 0);
+}
+
+describe('add()', function() {
+  var tests = [
+    {args: [1, 2],       expected: 3},
+    {args: [1, 2, 3],    expected: 6},
+    {args: [1, 2, 3, 4], expected: 10}
+  ];
+
+  tests.forEach(function(test) {
+    it('correctly adds ' + test.args.length + ' args', function() {
+      var res = add.apply(null, test.args);
+      assert.equal(res, test.expected);
+    });
+  });
+});
+
+
+```
