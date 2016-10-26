@@ -1,0 +1,7 @@
+---
+问题: rn组件的警告，setState should not used in unmount Component
+---
+思考： setState方法不能在未镶嵌的组建中调用，这就说明setState用在了rn中不合适的生命周期方法中
+>解决一: 在constructor()中调用了setState函数，很easy
+>解决二: 废了半天的功夫，发现是setInterval惹得祸，所以在组建卸载的时候清楚定时任务
+> componentWillunmount 以及clearInterval
