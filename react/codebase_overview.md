@@ -266,4 +266,43 @@ module.exports = ReactHostComponent;
 > React核心仅仅包含了定义模块的API，不包括reconciliation算法以及具体平台的代码，它被用于React DOM以及React Native，React的核心代码位于`src/isomorphic`
 >它可以在npm的react包中获取，相应的browser中是react.js,它导出的全局变量是React。
 
-### Renders
+### Renders    
+>React最初是唯DOM创建的但是后来改编用来适应原生平台React Native，在这里介绍React内部构建的概念。
+>**Renders管理一个React树如何变成底层平台的调用**，Renders位于`src/renders`文件夹下:
+>- React DOM Render渲染React组建为DOM。它实现了顶层的ReactDOM API并且可以在npm的react-dom中获取到，它可以
+>被用来做单独的browser bundle(react-dom.js)它导出了ReactDOM全局变量。
+>- React Native Render渲染React组建为原生视图，它是在React Native内部使用的，通过react-native-render npm包
+>将来可能会将它copy一份到React Native的仓库中，这样React Native可以在自己的工作空间中修改React了。
+>- React Test Render渲染React组建为JSON树，它使用了Jest的快照测试功能，在npm的react-test-render包中获取。
+>剩下的官方支持的render是react-art,为了避免我们在修改react时意外的破坏它，我们要在`src/renders/art`目录中运行测试运例
+>虽然如此，它的github仓库still acts as the source of truth。
+>虽然在技术上，我们可能会自定义render，目前不会官方支持，自定义render没有一个公共的稳定的协议，这就是我们将它放在单独的
+>一个地方的原因。
+>**注意：**在技术上,native render是很薄的一层用来让React和React Native相互作用，真正具体管理原生视图的代码是在React
+>Native仓库中
+
+### Reconciler(协调器)
+>甚至完全不同的render比如React DOM和React Native需要共享相同的逻辑，尤其是[reconciliation](https://facebook.github.io/react/docs/reconciliation.html)算法应尽可能相似，声明的渲染，
+>自定义组建，状态，生命周期方法，以及refs始终跨平台工作。
+>为了解决这一问题，不同的renders共享一些代码。我们称这些代码为`reconciler`(协调器),当一个更新（setUpdate()）被安排时，
+>reconciler（协调器）调用了组建中的render(),mounts,updates,或者unmount.
+>reconciler（协调器）没有被单独的分离出来，因为它们目前没有公共的API，它们会被renders使用，比如React DOM，React Native。
+
+### Reconciler栈    
+>'stack'reconciler供应于所有的线上React代码，它位于`src/renducers/shared/stack/reconciler`文件夹中，用于React和React Native
+>它是以面向对象的形式书写的(object-oriented)并且维护一个内部实例的树，（该树对应于所有React组件）。这个内部实例存在于自定义组件
+>及平台组件，这个内部实例对应用户来说不能直接访问，并且他们的树不会被暴露出来。当一个组件mounts，updates，unmounts，这个stack >reconciler将会调用内部实例的一个方法，这些方法是`mountComponent(element)`,`receiveComponent(element)`,和`unmountElement(element)`.
+>**Host Components**
+>平台特定组件，比如`<div>`,'View'，例如，React Dom通知stack reconciler使用DOM组件的`ReactDOMComponent`去处理mounting,updates,
+>以及unmounting。不论什么平台，`<div>`,`<View>`处理管理多子组件的方式是类似的，为了方便，reconciler提供了一个叫`ReactMultiChild`
+>来供DOM和Native render使用。
+>**复杂的组件**
+>用户定义的组件和所有的renders表现形式是一样的，这就是为什么reconciler提供了一个叫`ReactCompositeComponent`的公共实现，
+>它使用于各平台的renderer。复杂的组件也要实现`mounting`,`updating`,`unmounting`,但是不同于平台组件，`ReactCompositeComponent`
+>需要依赖于不同的代码，这就是为什么在用户定义的类中有`render()`,`componentDidMount()`方法的原因。
+>在更新期间中，`ReactCompositeComponent`检查`render()`在最后一次输出的`type`,'key'是否不同，如果`type`和`key`有改变，他会委派
+>去更新已存在的内部实例，另外，它会卸载老的子组件，并镶嵌新的，这个会在[Reconciliation algorithm(协调器算法)](https://facebook.github.io/react/docs/reconciliation.html)中描述。
+>**Recursion（递归）**
+>在一次更新中，stack reconciler会一直深入复杂的组件，运行他们的render()方法，并决定是否更新以及替换他们的唯一的组件。通过平台组件
+>(div View)执行平台代码，Host组件可能会有很多子组件，通常会递归处理。stack reconciler经常处理同步的单个处理组件树，当个别的树处理完成了
+>stack reconciler不会停止，所以当更新很深以及CPU有限时它不是最优的，
