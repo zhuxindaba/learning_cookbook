@@ -305,4 +305,23 @@ module.exports = ReactHostComponent;
 >**Recursion（递归）**
 >在一次更新中，stack reconciler会一直深入复杂的组件，运行他们的render()方法，并决定是否更新以及替换他们的唯一的组件。通过平台组件
 >(div View)执行平台代码，Host组件可能会有很多子组件，通常会递归处理。stack reconciler经常处理同步的单个处理组件树，当个别的树处理完成了
->stack reconciler不会停止，所以当更新很深以及CPU有限时它不是最优的，
+>stack reconciler不会停止，所以当更新很深以及CPU有限时它不是最优的。
+
+###  Fiber reconciler    
+>'fiber' reconciler是一个新的努力用来解决stack reconciler里的继承问题以及长期存在的一些问题。
+>它是完全重写的reconciler，[目前正在被开发](https://github.com/facebook/react/pulls?utf8=%E2%9C%93&q=is%3Apr%20is%3Aopen%20fiber)。
+>它的主要目标是:
+>- 在chunks中可拆分中断的能力。
+>- 在进程中确定优先次序、重订、复用的工作能力。
+>- Ability to yield back and forth between parents and children to support layout in React。
+>- render()返回多标签的能力
+>- 更好的支持错误边界
+>你可以阅读来更好的理解[React Fiber Architecture](https://github.com/acdlite/react-fiber-architecture),此刻，它处于试验阶段。
+>它的代码位于`src/renders/shared/fiber`
+
+### Event System    
+>React实现了一个综合型的事件系统，在ReactDOM和React Native都可工作，它的代码位于`src/renders/shared/shared/event`.
+
+### Add-ons(附加组件)    
+>每个React的附件组件在npm都以react-addons-的前缀的包单独的分离出来。它们的代码位于`src/addons`.
+>另外，我们提供了一个单独的叫`react-with-addons.js`的输出文件，它包含了React代码以及所有的addons暴露出的对象。
