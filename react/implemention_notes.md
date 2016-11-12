@@ -526,3 +526,175 @@ class DOMComponent {
   }  
 }
 ```
+
+### 更新主机组件    
+>主机组件实现，比如`DOMComponent`已不同的方式更新，当它们接收到新的元素时，他们需要更新基于平台特有的视图,
+>在React DOM的情景中，这意味着要更新DOM属性：
+
+```
+class DOMComponent {
+  //...
+  receive(nextElement) {
+    var node = this.node;
+    var prevElement = this.currentElement;
+    var prevProps = prevElement.props;
+    var nextProps = nextElement.props;    
+    this.currentElement = nextElement;
+
+    // Remove old attributes.
+    Object.keys(prevProps).forEach(propName => {
+      if (propName !== 'children' && !nextProps.hasOwnProperty(propName)) {
+        node.removeAttribute(propName);
+      }
+    });
+    // Set next attributes.
+    Object.keys(nextProps).forEach(propName => {
+      if (propName !== 'children') {
+        node.setAttribute(propName, nextProps[propName]);
+      }
+    });
+
+    // ...
+}
+```
+>接着，主机组件需要更新它们的children，和复杂组件不同的是，他们可能包含不止一个child，在下面这个简单的例子中，
+>我们使用内部实例数组并遍历它，是更新还是替换内部实例依赖于接收到的`type`是否与他们先前的`type`一致，真正的reconciler
+>也会也需要元素的`key`来进行插入还是删除，但是我们省略相关的实现。
+
+```
+// ...
+
+    //这是React元素的数组
+    var prevChildren = prevProps.children || [];
+    if (!Array.isArray(prevChildren)) {
+      prevChildren = [prevChildren];
+    }
+    var nextChildren = nextProps.children || [];
+    if (!Array.isArray(nextChildren)) {
+      nextChildren = [nextChildren];
+    }
+    //这是内部实例的数组
+    var prevRenderedChildren = this.renderedChildren;
+    var nextRenderedChildren = [];
+
+    //当我们遍历children时，我们要添加对这个数组的一些操作
+    var operationQueue = [];
+
+    //注意：下面的部分非常简单，他不会处理重新排序，它的存在只是为了说明整体流程，但不具体
+    for (var i = 0; i < nextChildren.length; i++) {
+      // Try to get an existing internal instance for this child
+      var prevChild = prevRenderedChildren[i];
+
+      // If there is no internal instance under this index,
+      // a child has been appended to the end. Create a new
+      // internal instance, mount it, and use its node.
+      if (!prevChild) {
+        var nextChild = instantiateComponent(nextChildren[i]);
+        var node = nextChild.mount();
+
+        // Record that we need to append a node
+        operationQueue.push({type: 'ADD', node});
+        nextRenderedChildren.push(nextChild);
+        continue;
+      }
+
+      // We can only update the instance if its element's type matches.
+      // For example, <Button size="small" /> can be updated to
+      // <Button size="large" /> but not to an <App />.
+      var canUpdate = prevChildren[i].type === nextChildren[i].type;
+
+      // If we can't update an existing instance, we have to unmount it
+      // and mount a new one instead of it.
+      if (!canUpdate) {
+        var prevNode = prevChild.node;
+        prevChild.unmount();
+
+        var nextChild = instantiateComponent(nextChildren[i]);
+        var nextNode = nextChild.mount();
+
+        // Record that we need to swap the nodes
+        operationQueue.push({type: 'REPLACE', prevNode, nextNode});
+        nextRenderedChildren.push(nextChild);
+        continue;
+      }
+
+      // If we can update an existing internal instance,
+      // just let it receive the next element and handle its own update.
+      prevChild.receive(nextChildren[i]);
+      nextRenderedChildren.push(prevChild);
+    }
+
+    // Finally, unmount any children that don't exist:
+    for (var j = nextChildren.length; j < prevChildren.length; j++) {
+     var prevChild = prevRenderedChildren[j];
+     var node = prevChild.node;
+     prevChild.unmount();
+
+     // Record that we need to remove the node
+     operationQueue.push({type: 'REMOVE', node});
+    }
+
+    // Point the list of rendered children to the updated version.
+    this.renderedChildren = nextRenderedChildren;
+
+    // ...
+```
+>最后一步，我们执行DOM操作，真实的reconciler是很复杂的因为它还得处理移动:
+
+```
+// Process the operation queue.
+  while (operationQueue.length > 0) {
+    var operation = operationQueue.shift();
+    switch (operation.type) {
+    case 'ADD':
+      this.node.appendChild(operation.node);
+      break;
+    case 'REPLACE':
+      this.node.replaceChild(operation.nextNode, operation.prevNode);
+      break;
+    case 'REMOVE':
+      this.node.removeChild(operation.node);
+      break;
+    }
+  }
+}
+}
+```
+>主机组件更新也是这样。
+
+### 顶级更新    
+>现在`CompositeComponent`和`DOMComponent`实现了`receive(nextElement)`方法，当元素类型同最后一次相同时，
+>我们可以改变顶层`mountTree()`来使用它:
+
+```
+function mountTree(element, containerNode) {
+  // Check for an existing tree
+  if (containerNode.firstChild) {
+    var prevNode = containerNode.firstChild;
+    var prevRootComponent = prevNode._internalInstance;
+    var prevElement = prevRootComponent.currentElement;
+
+    // If we can, reuse the existing root component
+    if (prevElement.type === element.type) {
+      prevRootComponent.receive(element);
+      return;
+    }
+
+    // Otherwise, unmount the existing tree
+    unmountTree(containerNode);
+  }
+
+  // ...
+
+}
+```
+>现在调用`mountTree()`两次非破坏性的
+
+```
+var rootEl = document.getElementById('root');
+
+mountTree(<App />, rootEl);
+// Reuses the existing DOM:
+mountTree(<App />, rootEl);
+```
+>这是React内部工作的基本原理。
