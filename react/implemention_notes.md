@@ -698,3 +698,37 @@ mountTree(<App />, rootEl);
 mountTree(<App />, rootEl);
 ```
 >这是React内部工作的基本原理。
+
+### What We Left Out     
+>这篇文章和真实的代码库进行了一个简单的比较，这儿有几个我们没有解决的问题：
+>- 组件可以返回null，reconciler(协调器)可以处理数组中的"空插槽(empty slots)"并渲染出去。
+>- 协调器会从元素中读取`key`,并且用它建立内部实例和数组中元素之间的关系，在真实的React实现中，大量的复杂性和它有关。
+>- 除了复杂的以及主机的内部实例，还有一些类对应空元素和文本组件。可以通过null代表文本节点和数组的空插槽。
+>- renders(渲染器)使用注入来传递主机内部类给reconciler(协调器)，比如，React DOM告诉协调器使用ReactDOMComponent作为主机内部实例来实现.
+>- 更新子机列表的逻辑被提取到一个叫ReactMultiChild 的一个mixin,它被用与ReactDOM和React Native的内部实例类的实现。
+>- 协调器也实现了在复杂组件中对`setState()`的支持，在事件处理中，大量的更新会成批的放入单个更新。
+>- 协调器会小心处理附加及分离到复杂组件和主机节点的refs
+>- 生命周期的钩子，会在DOM准备好之后调用，像`componentDidMount()`,`componentDidUpdate()`,获取'回调队列'并批处理执行。
+>- React将当前的更新的信息放到一个叫`transaction`的内部对象中，`transactions`用于追踪挂起的生命周期钩子队列。当前DOM的
+>内部警告以及其余"global"会给到一个特定的更新，`transactions`用来确保React更新后清空一切，例如，`transactions`提供
+>React DOM恢复输入选择后的更新。
+
+### Jumping into the Code    
+>- `ReactMount`is where the code like mountTree() and unmountTree() from this tutorial lives,它负责装载和卸载顶级组件
+>`ReactNativeMount`是ReactNative的模拟。
+>- 本教程中`ReactDOMComponent`和`DOMComponent`是同等的，它实现了ReactDOM渲染器的主机组件类。`ReactNativeBaseComponent`是
+>React Native的模拟。
+>- `ReactCompositeComponent`和`CompositeComponent`是同等的，它处理调用用户自定义组建以及维持state。
+>- `instantiateReactComponent`包含了一个开关用来选择一个正确的内部实例类用来构造一个元素。在此教程中和`instantiateComponent()`是同等的。
+>- `ReactReconciler`是`mountComponent`和`receiveComponent`以及`unmountComponent`方法的包装。它在内部实例上调用底层的实现。当然它也
+>包含所有内部实例实现的共享代码。
+>- `ReactChildReconciler`实现了通过元素的`key`,`mounting`，`updating`,`unmounting`children的逻辑。
+>- `ReactMultiChild`实现了渲染器对操作队列的处理。child的插入，移动，删除。
+>- `mount()`,`receive()`,`unmount`因为一些遗留原因在React代码库中，实际上被称为`mountComponent()`,`receiveComponent`,
+>`unmountComponent()`
+>- 内部实例的属性以下划线开头，比如,_currentElement,在代码库中自始至终它们被认为是只读的。
+
+
+### Future Directions(未来方向)    
+>stack reconciler具有的局限性，如同步，不能中断工作或chunks的拆分。在新的`Fiber reconciler`中有一个完全不同的结构，在未来我们打算使用
+>它代替现有的reconciler，但是目前还很遥远。
