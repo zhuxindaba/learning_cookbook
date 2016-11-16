@@ -28,3 +28,84 @@ function instantiateComponent(element) {
 }
 ```
 >CompositeComponent(复杂组件)的实现:
+
+```
+class CompositeComponent {
+  constructor(element) {
+    this.currentElement = element;
+    this.renderedComponent = null;
+    this.publicInstance = null;
+  }
+
+  getPublicInstance() {
+    return this.publicInstance;
+  }
+
+  mount() {
+    var element = this.currentElement;
+    var type = element.type;
+    var props = element.props;
+
+    var publicInstance;
+    if(isClass(type)) {
+      publicInstance = new type(props);
+      publicInstance.props = props;
+      if(publicInstance.componentWillMount) {
+        publicInstance.componentWillMount();
+      }
+      //如果是复合组件的话，需要走render方法得到渲染的结果
+      renderedElement = publicInstance.render();
+    }else if(typeof type === 'function') {
+      publicInstance = null;
+      renderedElement = type(props);
+    }
+
+    this.publicInstance = publicInstance;
+
+    var renderedComponent = instantiateComponent(renderedElement);
+    this.renderedComponent = renderedComponent;
+    return renderedComponent.mount();
+  }
+}
+```
+>这个实现保存了一些信息可以在更新期间使用到,比如`this.currentElement`,`this.renderedComponent`,
+>`this.publicInstance`.注意复合组件的内部实例和用户提供的`element.type`的实例是不同的。
+>`CompositeComponent`是协调器的一种实现，它是不会暴露给使用者的。我们从`element.type`种读取用户自定义类,
+>`CompositeComponent`创建它的实例，为了避免困惑，我们调用`CompositeComponent`和`DOMComponent`的中实例的内部实例。
+>他们存在，我们将长期活跃的数据与他们联系在一起。
+>相比之下，我们调用用户自定义类的一个"公共实例"的实例。公共实例就是自定义组件中render方法以及其他方法中的this。
+>`DOMComponent`的实现:
+
+```
+class DOMComponent {
+
+  constructor(element) {
+    this.currentElement = element;
+    this.renderedChildren = [];
+    this.node = null;
+  }
+
+  getPublicInstance() {
+    return this.node;
+  }
+
+  mount() {
+    var element = this.element;
+    var type = element.type;
+    var props = element.props;
+    var children = props.children || [];
+    if(!Array.isArray(children)) {
+      children = [children];
+    }
+
+    var node = document.createElement(type);
+    this.node = node;
+    Object.keys(props).forEach(propName => {
+      if(propName !== 'children') {
+        node.setAttribute(propName, props[propName]);
+      }
+    });
+  }
+
+}
+```
