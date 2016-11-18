@@ -7,7 +7,79 @@ categories:
 >vue是一个用来构建交互式web界面的库。它的核心集中于视图层，它很容易与其他库或现有的项目集成。
 >另一方面，Vue完全有能力服务员复杂的单页面应用。但是Vue和其它的框架有什么不同呢？
 
-### 和其它框架的比较    
+### 和React的比较    
+>React和Vue有很多相似之处:
+>- 利用虚拟DOM
+>- 提供了reactive(反应性)和可组合的视图组件
+>在代码核心库中，保持对相关库管理的routing，全局state的关注。作用域也很相似。我们想保证的不仅
+>有技术上的准确也要确保技术的平衡，我们找出React哪里优于Vue，比如，React庞大的生态圈以及
+>自定义渲染器的丰富性。
+
+##### 性能（渲染性能）    
+>Vue胜过React，当渲染UI时，DOM的操作通常是非常昂贵的，没有库可以使那些原生的操作更快，我们能做的
+>最好的就是:
+>1. 尽量减少必要的DOM变化的数量，React和Vue都使用了虚拟DOM来解决这个问题。
+>2. 尽可能在顶层的DOM操作上添加较小的开销(纯js计算)，这里是React和Vue的区别。
+>javascript开销和计算必要的DOM操作机制有直接关系，Vue和React都利用虚拟DOM来达到它，但是Vue的实现更
+>轻量级，因此比React的开销更少。
+>React和Vue都提供了功能组件，他们是stateless，instanceless的因此需要的开销很少。当它们用于性能关键
+>的场景中，Vue更快，为了证明这个，我们渲染1万个item100次，强烈建议自己实践，因为它和软件、浏览器相关。
+>相关比较如下:
+
+```
+                  Vue       React
+Fatest            23ms      63ms
+Mediam            42ms      81ms
+Average           51ms      94ms
+95thPerc.         73ms      164ms
+Slowest           343ms     453ms
+```
+
+##### 更新性能    
+>在React中，当一个组件的state改变了，它会触发整个组件的sub-tree的重新渲染，为了避免child组件不必要
+>的渲染，你需要在该组件中使用`shouldComponentUpdate`并定义不变的结构，而在Vue中，在渲染过程中，会自
+>动的追踪组件的依赖项，所以系统会精确的知道哪个组件需要正真的重新渲染。这就意味着未优化的Vue比未优化的
+>React要快。由于Vue的加强了渲染性能，即使React进行了全部的优化操作，通常也比Vue慢。
+
+##### 在开发过程中     
+>虽然在生产环境中的性能指标是非常重要的，因为这和用户体验相关联。但是在开发时的性能仍然重要，因为这与
+>我们开发者相关联.
+>Vue和React在大多数程序中开发可以保持足够快速。但是，在高帧速率的可视化或动画时，Vue每秒处理10帧，而
+>React每秒只有1帧。这是因为在开发环境中React需要检查大量的不变量，这是用来提示一些重要的错误或警告用的。
+>当然在Vue中也是同意这是很重要的，但是当执行这些检查时，我们对性能保持密切关注。
+
+##### HTML & CSS    
+>在React中，所有的东西是avascript，虽然听起来很简单且高雅但是当你向下挖掘时，在javascript中写HTML和CSS，
+>当解决问题时，会很痛苦。而在Vue中，我们信奉web的技术并将它们，将css写在html顶部。
+####### JSX vs Templates    
+在React中，所有的组件在JSX中来表示他们的UI，下面是个例子:
+
+```
+render () {
+  let { items } = this.props
+  let children
+  if (items.length > 0) {
+    children = (
+      <ul>
+        {items.map(item =>
+          <li key={item.id}>{item.name}</li>
+        )}
+      </ul>
+    )
+  } else {
+    children = <p>No items found.</p>
+  }
+  return (
+    <div className='list-container'>
+      {children}
+    </div>
+  )
+}
+```
+>JSX有以下优点：
+>- 使用编程语言（js）构建你的视图。
+>- 在某些方式下，对JSX的工具支持比vue的模板更先进。
+>在Vue中，我们有`render functions`甚至还有支持`jsx`。 
 
 
 ### HTML & CSS    
