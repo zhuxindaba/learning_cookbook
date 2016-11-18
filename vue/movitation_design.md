@@ -49,7 +49,7 @@ Slowest           343ms     453ms
 >当然在Vue中也是同意这是很重要的，但是当执行这些检查时，我们对性能保持密切关注。
 
 ##### HTML & CSS    
->在React中，所有的东西是avascript，虽然听起来很简单且高雅但是当你向下挖掘时，在javascript中写HTML和CSS，
+>在React中，所有的东西是javascript，虽然听起来很简单且高雅但是当你向下挖掘时，在javascript中写HTML和CSS，
 >当解决问题时，会很痛苦。而在Vue中，我们信奉web的技术并将它们，将css写在html顶部。
 ####### JSX vs Templates    
 在React中，所有的组件在JSX中来表示他们的UI，下面是个例子:
@@ -79,7 +79,7 @@ render () {
 >JSX有以下优点：
 >- 使用编程语言（js）构建你的视图。
 >- 在某些方式下，对JSX的工具支持比vue的模板更先进。
->在Vue中，我们有`render functions`甚至还有支持`jsx`。 
+>在Vue中，我们有`render functions`甚至还有支持`jsx`。
 
 
 ### HTML & CSS    
