@@ -28,3 +28,27 @@ categories:
 >Docker不需要你购买特定的语言，特定的框架，特定的打包系统，特定的配置语言。
 >你的程序是Unix进程么？使用文件了么？tcp链接？环境变量？标准Unix流以及命令行参数作为输入
 >输出，在Docker都可以。
+
+### Escape dependecy hell(逃脱地狱依赖)    
+>一个常见的问题就是开发人员很难以一个简单自动的方式管理一个程序的所有依赖，常见的原因有以下一些:
+>- 跨平台依赖(cross-platform dependencies).现在的应用程序经常依赖系统库、二进制文件、特定语言包，
+>特定的框架模块、作为另外一个项目开发的内部组件等等的组合。这些依赖处在不同的"世界"并且需要不同的工具
+>而且相互之间不一定能正常的工作，所以需要尴尬的自定义集成。
+>- 依赖冲突.不同的应用程序有可能需要依赖一个库的不同版本。
+>- 自定义依赖.开发者可能需要准备应用程序依赖的一个自定义版本，一些打包工具可以处理依赖的自定义版本,
+>但是有些工具则不行，并且每种的处理方式又不同。
+>Docker让开发者在一个地方描述所有的程序依赖来轻松的解决了地狱依赖的这些常见的问题，同时精简了组装过程。
+>Docker通过运行Unix命令序列来定义一个build,在同一个容器里一个接一个的。构造命令修改了容器里的内容(经常
+>是安装新文件，新文件系统)，下一个命令修改了更多的内容等等。由于每一个命令都是基于上一个命令的结果，命令
+>执行的顺序标识依赖项。下面的是一个典型的Docker构造过程：
+
+```
+FROM ubuntu:12.04
+RUN apt-get update && apt-get install -y python python-pip curl
+RUN curl -sSL https://github.com/shykes/helloflask/archive/master.tar.gz | tar -xzv
+RUN cd helloflask-master && pip install -r requirements.txt
+```
+>Docker不关心依赖的构建关系，只要他们可以在容器中可以通过Unix命令构建。
+
+
+### ToDo（入门）
