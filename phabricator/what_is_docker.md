@@ -8,7 +8,7 @@ categories:
 >'platform-agnostic(平台不可知？)'.这意味着它可以运行在任何地方，在你的笔记本也行，在云平台亦可以。
 >并且不要求使用特定的语言，框架，包系统。这使得应用程序的部署，web app的规模调整，后端服务能更好的构建
 >而不依赖于特定的堆栈或提供者。
->docker是一个开放源码的部署引擎,它是由(dotCloud)[http://web.archive.org/web/20130530031104/https://www.dotcloud.com/]驱动的。
+>docker是一个开放源码的部署引擎,它是由[dotCloud](http://web.archive.org/web/20130530031104/https://www.dotcloud.com/)驱动的。
 
 ### 比VMs好     
 >分发应用程序及沙坑执行的常用方法是使用虚拟机。典型的VM格式有VMware的vmdk，Oracle的VirtualBox
