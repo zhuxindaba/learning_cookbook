@@ -1,1 +1,1 @@
-[react生命周期]('./react/lifeCycle.md')
+[react生命周期](./react/LifeCycle.md)
