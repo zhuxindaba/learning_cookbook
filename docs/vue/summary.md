@@ -18,4 +18,15 @@
     	{{todo}}
     </li>
 ```
-上面的代码只会渲染没有完成的item
+上面的代码只会渲染没有完成的ite
+
+### `v-model`的修饰 比如`v-model.number`,`v-model.trim`    
+```
+    <input v-model.number="age" type="numer">
+    <input v-model.trim="msg">
+```
+### `$on`和`$emit`不是`addEventListener`和`dispatchment`的别名,尽管它们工作
+起来很相似
+
+
+### 组件作用域规则：在父模板中的一切经过编译后都属于父组件作用域，在子模板中的一切低于属于子组件作用域

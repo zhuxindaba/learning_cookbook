@@ -1,2 +1,0 @@
-### Computed Vs Methods
-
