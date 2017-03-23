@@ -1,8 +1,8 @@
 # Nginx的安装部署    
 
 ### 下载所需安装包    
-- 下载[PCRE]源码包(http://www.pcre.org/).解压并在根目录下执行`make`指令。
-- 下载[zlip]源码包(http://zlib.net/).解压并在根目录下执行`make`指令。
+- 下载[PCRE源码包](http://www.pcre.org/).解压并在根目录下执行`make`指令。
+- 下载[zlip源码包](http://zlib.net/).解压并在根目录下执行`make`指令。
 - 下载[openssl源码包](https://www.openssl.org/source/)解压。
 - 从[官网](http://nginx.org/)下载源码包并解压执行以下命令:。
 
