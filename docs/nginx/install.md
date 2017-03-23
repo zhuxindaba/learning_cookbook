@@ -1,9 +1,15 @@
 # Nginx的安装部署    
 
-### 源码下载
-1. 从[官网](http://nginx.org/)下载源码包。
+### 下载所需安装包    
+- 下载[PCRE]源码包(http://www.pcre.org/).解压并在根目录下执行`make`指令。
+- 下载[zlip]源码包(http://zlib.net/).解压并在根目录下执行`make`指令。
+- 下载[openssl源码包](https://www.openssl.org/source/)解压。
+- 从[官网](http://nginx.org/)下载源码包并解压执行以下命令:。
 
-### 构建源码   
+```
+./configure --prefix=/usr/local/src/nginx --with-pcre=/usr/local/src/pcre-8.00 --with-zlib=/usr/local/src/zlib-1.2.11 --with-openssl=/usr/local/src/openssl-1.1.0e
+```
+### 指令说明        
 - 通过`configure`配置构建指令.以下是一些指令参数：
 - `--prefix=path`: 定义保存服务文件的目录,默认的配置目录是`/usr/local/nginx`。
 - `--sbin-path=path`: 定义执行nginx的文件名，默认值为`prefix/sbin/nginx`。
